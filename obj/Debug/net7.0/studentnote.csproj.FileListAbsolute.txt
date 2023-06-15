@@ -1,0 +1,15 @@
+C:\Users\mjsiv\Desktop\studentnote\bin\Debug\net7.0\studentnote.exe
+C:\Users\mjsiv\Desktop\studentnote\bin\Debug\net7.0\studentnote.deps.json
+C:\Users\mjsiv\Desktop\studentnote\bin\Debug\net7.0\studentnote.runtimeconfig.json
+C:\Users\mjsiv\Desktop\studentnote\bin\Debug\net7.0\studentnote.dll
+C:\Users\mjsiv\Desktop\studentnote\bin\Debug\net7.0\studentnote.pdb
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.csproj.AssemblyReference.cache
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.AssemblyInfoInputs.cache
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.AssemblyInfo.cs
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.csproj.CoreCompileInputs.cache
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.dll
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\refint\studentnote.dll
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.pdb
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.genruntimeconfig.cache
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\ref\studentnote.dll
