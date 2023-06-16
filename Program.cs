@@ -246,11 +246,11 @@ public static void DisplayMainMenu()
 // function for listing corses
  public static void ListCourses()
     {
-        Console.WriteLine("List of courses:");
+        Console.WriteLine("Liste des cours :");
 
         foreach (var course in courses)
         {
-            Console.WriteLine($"ID: {course.Id}, Name: {course.Name}");
+            Console.WriteLine($"ID: {course.Id}, Nom: {course.Name}");
         }
 
         Console.WriteLine();
@@ -261,18 +261,18 @@ public static void DisplayMainMenu()
 // function for adding a courses
 public static void AddCourse()
     {
-        Console.WriteLine("Add a new course to the program:");
+        Console.WriteLine("Ajout d'un nouveau cours au programme :");
 
-        Console.WriteLine("Enter the ID:");
+        Console.WriteLine("Entrez l'identifiant :");
         int id = Convert.ToInt32(Console.ReadLine());
 
-        Console.WriteLine("Enter the name:");
+        Console.WriteLine("Entrez le nom :");
         string name = Console.ReadLine();
 
         Course newCourse = new Course(id, name);
         courses.Add(newCourse);
 
-        Console.WriteLine("New course added successfully!");
+        Console.WriteLine("Nouveau cours ajouté avec succès !");
         Console.WriteLine();
         DisplayCourseMenu();
     }
@@ -281,8 +281,8 @@ public static void AddCourse()
 // function for delete a course
  public static void DeleteCourse()
     {
-        Console.WriteLine("Delete a course by its ID:");
-        Console.WriteLine("Enter the course ID:");
+        Console.WriteLine("Suppression d'un cours par son identifiant :");
+        Console.WriteLine("Entrez l'identifiant du cours :");
         int id = Convert.ToInt32(Console.ReadLine());
 
         Course courseToDelete = courses.Find(c => c.Id == id);
@@ -290,11 +290,11 @@ public static void AddCourse()
         if (courseToDelete != null)
         {
             courses.Remove(courseToDelete);
-            Console.WriteLine("Course deleted successfully!");
+            Console.WriteLine("Cours supprimé avec succès !");
         }
         else
         {
-            Console.WriteLine("No course found with this ID.");
+            Console.WriteLine("Aucun cours avec cet identifiant n'a été trouvé.");
         }
 
         Console.WriteLine();
