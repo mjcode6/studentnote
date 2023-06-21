@@ -10,8 +10,14 @@ namespace studentnote
         private const string DataFilePath = "data.json";
         private const string LogFilePath = "log.txt";
 
+        private static Logger logger;
+
         static void Main(string[] args)
         {
+            // Initialize the logger
+            logger = new Logger(LogFilePath);
+
+           
             // Load data from the JSON file
             List<Student> students = LoadData();
 
@@ -19,7 +25,7 @@ namespace studentnote
             bool exit = false;
             while (!exit)
             {
-                 Console.WriteLine("Menu Principal:");
+                 logger.LogAction("Menu Principal:");
                  Console.WriteLine("");
                 Console.WriteLine("1. Elèves");
                 Console.WriteLine("");
@@ -34,14 +40,17 @@ namespace studentnote
                 switch (choice)
                 {
                     case "1":
+                    logger.LogAction("Option 1 sélectionnée : Manager les élèves");
                     Console.Clear();
                         ManageStudents(students);
                         break;
                     case "2":
+                    logger.LogAction("Option 2 sélectionnée : Manager les Cours");
                      Console.Clear();
                         ManageCourses(students);
                         break;
                     case "0":
+                    logger.LogAction("Option 0 sélectionnée : Quitter L'application");
                      Console.Clear();
                       Console.WriteLine("Au revoir!");
                         exit = true;
@@ -64,7 +73,7 @@ namespace studentnote
             while (!backToMainMenu)
             {
                 
-                Console.WriteLine("Menu Elèves:");
+                logger.LogAction("Menu Elèves:");
                 Console.WriteLine("");
                 Console.WriteLine("1. Lister les élèves");
                 Console.WriteLine("");
@@ -86,26 +95,32 @@ namespace studentnote
                 switch (choice)
                 {
                     case "1":
+                    logger.LogAction("Option 1 sélectionnée : Lister les élèves");
                      Console.Clear();
                         ListStudents(students);
                         break;
                     case "2":
+                    logger.LogAction("Option 2 sélectionnée : Ajouter les élèves");
                      Console.Clear();
                         AddStudent(students);
                         break;
                     case "3":
+                    logger.LogAction("Option 3 sélectionnée : Voir les élèves");
                      Console.Clear();
                         ViewStudent(students);
                         break;
                     case "4":
+                    logger.LogAction("Option 4 sélectionnée : Ajouter les Note et commentaire aux les éleves");
                      Console.Clear();
                         AddNoteAndComment(students);
                         break;
                         case "5":
+                        logger.LogAction("Option 5 sélectionnée : Effecer les élèves");
                          Console.Clear();
                         DeleteStudent(students);
                         break;
                     case "0":
+                    logger.LogAction("Option 0 sélectionnée : Retour au menu principal");
                     Console.Clear();
                         backToMainMenu = true;
                         break;
@@ -143,7 +158,7 @@ static void DeleteStudent(List<Student> students)
             bool backToMainMenu = false;
             while (!backToMainMenu)
             {
-                Console.WriteLine("Menu Cours : ");
+                logger.LogAction("Menu Cours : ");
                 Console.WriteLine("");
                 Console.WriteLine("1. Lister les cours existants");
                 Console.WriteLine("");
@@ -162,18 +177,22 @@ static void DeleteStudent(List<Student> students)
                 switch (choice)
                 {
                     case "1":
+                    logger.LogAction("Option 1 sélectionnée : Lister les coures");
                      Console.Clear();
                         ListCourses(students);
                         break;
                     case "2":
+                    logger.LogAction("Option 2 sélectionnée : Ajouter les coures");
                     Console.Clear();
                         AddCourse(students);
                         break;
                          case "3":
+                         logger.LogAction("Option 3 sélectionnée : Effecer les courses");
                          Console.Clear();
                         DeleteCourse(students);
                         break;
                     case "0":
+                    logger.LogAction("Option 0 sélectionnée : Retour au menu principal");
                     Console.Clear();
                         backToMainMenu = true;
                         break;

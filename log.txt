@@ -1,0 +1,6 @@
+[21/06/2023 16:33:37] Action: Menu Principal:
+[21/06/2023 16:35:47] Action: Menu Principal:
+[21/06/2023 16:35:56] Action: Option 1 sélectionnée : Lister les élèves
+[21/06/2023 16:48:11] Action: Menu Principal:
+[21/06/2023 16:50:01] Action: Menu Principal:
+[21/06/2023 16:50:14] Action: Option 0 sélectionnée : Quitter L'application
