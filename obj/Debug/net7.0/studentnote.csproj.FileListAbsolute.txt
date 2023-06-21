@@ -13,3 +13,5 @@ C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\refint\studentnote.dll
 C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.pdb
 C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.genruntimeconfig.cache
 C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\ref\studentnote.dll
+C:\Users\mjsiv\Desktop\studentnote\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\mjsiv\Desktop\studentnote\obj\Debug\net7.0\studentnote.csproj.CopyComplete

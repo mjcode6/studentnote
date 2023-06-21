@@ -1,309 +1,388 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
 
-
-namespace studentnote;
-
-class Program
+namespace studentnote
 {
- //Les eleves et cours. Ces listes sont utilisées pour stocker les données
-     public static List<Student> students = new List<Student>();
-      public static List<Course> courses = new List<Course>();
-    static void Main(string[] args)
+    class Program
     {
-        DisplayMainMenu();
-        //  DisplayStudentMenu();
-        //   DisplayCourseMenu();
-    }
+        private const string DataFilePath = "data.json";
+        private const string LogFilePath = "log.txt";
 
-#region section main menu
-public static void DisplayMainMenu()
-    {
-        Console.WriteLine("Menu Principal:");
-        Console.WriteLine("1. Elèves");
-        Console.WriteLine("2. Cours");
-        Console.WriteLine("0. Quitter");
-        Console.WriteLine("Choisissez une option :");
-
-
-        int choice = Convert.ToInt32(Console.ReadLine());
-
-        switch (choice)
+        static void Main(string[] args)
         {
-            case 1:
-                DisplayStudentMenu();
-                break;
-            case 2:
-                DisplayCourseMenu();
-                break;
-            case 0:
-                Console.WriteLine("Au revoir!");
-                Environment.Exit(0);
-                break;
-            default:
-                Console.WriteLine("Option invalide. Veuillez choisir une option valide.");
-                DisplayMainMenu();
-                break;
-        }
-    }
+            // Load data from the JSON file
+            List<Student> students = LoadData();
 
-#endregion
-
-
-
-
-#region section student
-
-// for display students menu
- public static void DisplayStudentMenu()
-    {
-        Console.WriteLine("Menu Elèves:");
-        Console.WriteLine("1. Lister les élèves");
-        Console.WriteLine("2. Créer un nouvel élève");
-        Console.WriteLine("3. Consulter un élève existant");
-        Console.WriteLine("4. Ajouter une note et une appréciation pour un cours sur un élève existant");
-        Console.WriteLine("0. Revenir au menu principal");
-        Console.WriteLine("Choisissez une option :");
-
-          int choice = Convert.ToInt32(Console.ReadLine());
-
-        switch (choice)
-        {
-            case 1:
-                ListStudents();
-                break;
-            case 2:
-                CreateStudent();
-                break;
-            case 3:
-                ViewStudent();
-                break;
-            case 4:
-                AddGradeToStudent();
-                break;
-            case 0:
-                DisplayMainMenu();
-                break;
-            default:
-                Console.WriteLine("Option invalide. Veuillez choisir une option valide.");
-                DisplayStudentMenu();
-                break;
-        }
-        
-
-
-        // for listing students and for  futhuer interaction
-    static void ListStudents()
-    {
-        Console.WriteLine("Liste des élèves :");
-
-        foreach (var student in students)
-        {
-            Console.WriteLine($"ID: {student.Id}, Prénom: {student.LastName}, Nom: {student.FirstName}");
-        }
-
-        Console.WriteLine();
-        DisplayStudentMenu();
-    }
-// function for create new student
-  static void CreateStudent()
-    {
-        Console.WriteLine("Création d'un nouvel élève :");
-
-        Console.WriteLine("Entrez l'identifiant :");
-        int id = Convert.ToInt32(Console.ReadLine());
-
-        Console.WriteLine("Entrez le nom :");
-        string lastName = Console.ReadLine();
-
-        Console.WriteLine("Entrez le prénom :");
-        string firstName = Console.ReadLine();
-
-        Console.WriteLine("Entrez la date de naissance (au format JJ/MM/AAAA) :");
-        DateTime dateOfBirth = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", null);
-
-        Student newStudent = new Student(id, lastName, firstName, dateOfBirth);
-        students.Add(newStudent);
-
-        Console.WriteLine("Nouvel élève créé avec succès !");
-        Console.WriteLine();
-        DisplayStudentMenu();
-    }
-
-
-// displaing the information from the lists about student
- static void ViewStudent()
-    {
-        Console.WriteLine("Consultation d'un élève :");
-        Console.WriteLine("Entrez l'identifiant de l'élève :");
-        int id = Convert.ToInt32(Console.ReadLine());
-
-        Student student = students.Find(s => s.Id == id);
-
-        if (student != null)
-        {
-            Console.WriteLine($"ID: {student.Id}, Prénom: {student.LastName}, Nom: {student.FirstName},  Date de naissance: {student.DateOfBirth}");
-
-            Console.WriteLine("Notes par cours :");
-            foreach (var grade in student.Grades)
+            // Display the main menu
+            bool exit = false;
+            while (!exit)
             {
-                Console.WriteLine($"Course: {grade.Key}, Notes: {grade.Value.Item1}, Appréciation: {grade.Value.Item2}");
+                 Console.WriteLine("Menu Principal:");
+                 Console.WriteLine("");
+                Console.WriteLine("1. Elèves");
+                Console.WriteLine("");
+                Console.WriteLine("2. Cours");
+                Console.WriteLine("");
+                Console.WriteLine("0. Quitter");
+                Console.WriteLine("");
+                Console.Write("Choisissez une option : ");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                    Console.Clear();
+                        ManageStudents(students);
+                        break;
+                    case "2":
+                     Console.Clear();
+                        ManageCourses(students);
+                        break;
+                    case "0":
+                     Console.Clear();
+                      Console.WriteLine("Au revoir!");
+                        exit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Choix invalide. Veuillez réessayer.");
+                        break;
+                }
+
+                Console.WriteLine();
             }
 
-            double averageGrade = student.CalculateAverageGrade();
-            Console.WriteLine($"Moyenne Notes: {averageGrade}");
+            // Save data to the JSON file
+            SaveData(students);
         }
-        else
+
+        static void ManageStudents(List<Student> students)
         {
-            Console.WriteLine("Aucun élève avec cet identifiant n'a été trouvé.");
+            bool backToMainMenu = false;
+            while (!backToMainMenu)
+            {
+                
+                Console.WriteLine("Menu Elèves:");
+                Console.WriteLine("");
+                Console.WriteLine("1. Lister les élèves");
+                Console.WriteLine("");
+                Console.WriteLine("2. Créer un nouvel élève");
+                Console.WriteLine("");
+                Console.WriteLine("3. Consulter un élève existant");
+                Console.WriteLine("");
+                Console.WriteLine("4. Ajouter une note et une appréciation pour un cours sur un élève existant");
+                Console.WriteLine("");
+                Console.WriteLine("5. Supprimer un eléves par son identifiant");
+                Console.WriteLine("");
+                Console.WriteLine("0. Revenir au menu principal");
+                Console.WriteLine("");
+            
+                Console.Write("Choisissez une option :  ");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                     Console.Clear();
+                        ListStudents(students);
+                        break;
+                    case "2":
+                     Console.Clear();
+                        AddStudent(students);
+                        break;
+                    case "3":
+                     Console.Clear();
+                        ViewStudent(students);
+                        break;
+                    case "4":
+                     Console.Clear();
+                        AddNoteAndComment(students);
+                        break;
+                        case "5":
+                         Console.Clear();
+                        DeleteStudent(students);
+                        break;
+                    case "0":
+                    Console.Clear();
+                        backToMainMenu = true;
+                        break;
+                    default:
+                        Console.WriteLine("Choix invalide. Veuillez réessayer.");
+                        break;
+                }
+
+                Console.WriteLine();
+            }
         }
+static void DeleteStudent(List<Student> students)
+{
+    Console.WriteLine("Supprimer l'élève");
+    Console.WriteLine("");
+    Console.Write("Entrez l'identifiant de l'étudiant : ");
+    int id = Convert.ToInt32(Console.ReadLine());
 
-        Console.WriteLine();
-        DisplayStudentMenu();
-    }
+    Student studentToDelete = students.Find(s => s.Id == id);
 
-
-
-
-// for adding grade for student
-  static void AddGradeToStudent()
+    if (studentToDelete != null)
     {
-        Console.WriteLine("Ajout d'une note et d'une appréciation pour un cours sur un élève existant :");
-        Console.WriteLine("Entrez l'identifiant de l'élève :");
-        int id = Convert.ToInt32(Console.ReadLine());
-
-        Student student = students.Find(s => s.Id == id);
-
-        if (student != null)
-        {
-            Console.WriteLine($"ID: {student.Id}, Prénom: {student.LastName}, Nom: {student.FirstName}");
-
-            Console.WriteLine("Entrez le nom du cours :");
-            string courseName = Console.ReadLine();
-
-            Console.WriteLine("Entrez la note :");
-            double grade = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Entrez l'appréciation :");
-            string feedback = Console.ReadLine();
-
-            student.Grades[courseName] = new Tuple<double, string>(grade, feedback);
-
-            Console.WriteLine("Note et appréciation ajoutées avec succès !");
-        }
-        else
-        {
-            Console.WriteLine("Aucun élève avec cet identifiant n'a été trouvé.");
-        }
-
-        Console.WriteLine();
-        DisplayStudentMenu();
+        students.Remove(studentToDelete);
+        Console.WriteLine("Étudiant supprimé avec succès !");
     }
-
-
-
-
-
-    }
-#endregion
-
-
-
-
-
-#region section Courses
-
- public static void DisplayCourseMenu()
+    else
     {
-        Console.WriteLine("Menu Cours:");
-        Console.WriteLine("1. Lister les cours existants");
-        Console.WriteLine("2. Ajouter un nouveau cours au programme");
-        Console.WriteLine("3. Supprimer un cours par son identifiant");
-        Console.WriteLine("0. Revenir au menu principal");
-        Console.WriteLine("Choisissez une option :");
-        int choice = Convert.ToInt32(Console.ReadLine());
+        Console.WriteLine("");
+        Console.WriteLine("Aucun étudiant avec cette pièce d'identité n'a été trouvé.");
+    }
+}
 
-        switch (choice)
+        static void ManageCourses(List<Student> students)
         {
-            case 1:
-                ListCourses();
-                break;
-            case 2:
-                AddCourse();
-                break;
-            case 3:
-                DeleteCourse();
-                break;
-            case 0:
-               DisplayMainMenu();
-                break;
-            default:
-                Console.WriteLine("Option invalide. Veuillez choisir une option valide.");
-                DisplayCourseMenu();
-                break;
+            bool backToMainMenu = false;
+            while (!backToMainMenu)
+            {
+                Console.WriteLine("Menu Cours : ");
+                Console.WriteLine("");
+                Console.WriteLine("1. Lister les cours existants");
+                Console.WriteLine("");
+                Console.WriteLine("2. Ajouter un nouveau cours au programme");
+                Console.WriteLine("");
+                Console.WriteLine("3. Supprimer un cours par son Nom");
+                Console.WriteLine("");
+                Console.WriteLine("0. Revenir au menu principal");
+                Console.WriteLine("");
+                Console.Write("Choisissez une option :  ");
+                Console.WriteLine("");
+
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                     Console.Clear();
+                        ListCourses(students);
+                        break;
+                    case "2":
+                    Console.Clear();
+                        AddCourse(students);
+                        break;
+                         case "3":
+                         Console.Clear();
+                        DeleteCourse(students);
+                        break;
+                    case "0":
+                    Console.Clear();
+                        backToMainMenu = true;
+                        break;
+                    default:
+                        Console.WriteLine("Choix invalide. Veuillez réessayer.");
+                        break;
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+        static void ListStudents(List<Student> students)
+        {
+            Console.WriteLine("Liste des étudiants");
+            foreach (var student in students)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("---------------------------------------------------");
+
+                Console.WriteLine("");
+                Console.WriteLine($"ID : {student.Id},             Nom : {student.FirstName} {student.LastName}");
+                Console.WriteLine("");
+                Console.WriteLine("---------------------------------------------------");
+           
+            }
+        }
+
+        static void AddStudent(List<Student> students)
+        {
+            Console.WriteLine("Ajouter un étudiant");
+            Console.WriteLine("");
+            // Console.Write("Enter student ID: ");
+            // int id = Convert.ToInt32(Console.ReadLine());
+
+             int id = students.Count + 1;
+            
+            Console.Write("Entrez le prénom de l'étudiant : ");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("");
+            Console.Write("Entrez le nom de famille de l'élève : ");
+            string lastName = Console.ReadLine();
+            Console.WriteLine("");
+            Console.Write("Entrez la date de naissance de l'étudiant (AAAA-MM-JJ) : ");
+            DateTime dateOfBirth = Convert.ToDateTime(Console.ReadLine());
+
+            Student newStudent = new Student(id, firstName, lastName, dateOfBirth);
+            students.Add(newStudent);
+            Console.WriteLine("");
+            Console.WriteLine("Étudiant ajouté avec succès.");
+        }
+
+        static void ViewStudent(List<Student> students)
+        {
+            Console.WriteLine("Voir l'étudiant");
+            Console.WriteLine("");
+            Console.Write("Entrez l'identifiant de l'étudiant : ");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            Student student = students.Find(s => s.Id == id);
+            if (student != null)
+            {
+                Console.WriteLine($"ID:                    {student.Id}");
+                Console.WriteLine("---------------------------------------------------------------------");
+                Console.WriteLine("");
+                Console.WriteLine($"Nom:                         {student.FirstName} {student.LastName}");
+                Console.WriteLine("");
+                Console.WriteLine($"Date de naissance :          {student.DateOfBirth.ToShortDateString()}");
+               Console.WriteLine("");
+                Console.WriteLine("Notes :");
+                
+
+                foreach (var grade in student.Grades)
+                {
+                     Console.WriteLine("");
+                    Console.WriteLine($"Course :                      {grade.Course}");
+                    Console.WriteLine("");
+                    Console.WriteLine($"Notes :                       {grade.GetGrade()} / 20");
+                    Console.WriteLine("");
+                    Console.WriteLine($"Commentaire :                 {grade.Comment}");
+                }
+                Console.WriteLine("");
+                Console.WriteLine($"La note moyenne :             {student.CalculateAverageGrade()}%  / 100 %");
+
+                Console.WriteLine("");
+                Console.WriteLine("---------------------------------------------------------------------");
+
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Étudiant introuvable.");
+            }
+        }
+
+        static void AddNoteAndComment(List<Student> students)
+        {
+            Console.WriteLine("Ajouter une note et un commentaire");
+            Console.WriteLine("");
+            Console.Write("Entrez l'identifiant de l'étudiant : ");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            Student student = students.Find(s => s.Id == id);
+            if (student != null)
+            {
+                Console.WriteLine($"Étudiant: {student.FirstName} {student.LastName}");
+                Console.Write("Entrez le nom du cours : ");
+                string course = Console.ReadLine();
+                Console.WriteLine("");
+                Console.Write("Entrez la note : ");
+                double grade = Convert.ToDouble(Console.ReadLine());
+                Console.WriteLine("");
+                Console.Write("Entrez un commentaire : ");
+                string comment = Console.ReadLine();
+
+                Grade newGrade = new Grade(course, grade, comment);
+                student.Grades.Add(newGrade);
+                Console.WriteLine("");
+                Console.WriteLine("Note et commentaire ajoutés avec succès.");
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Étudiant introuvable.");
+            }
+        }
+
+        static void ListCourses(List<Student> students)
+        {
+            Console.WriteLine("Liste des cours");
+            Console.WriteLine("");
+            HashSet<string> courses = new HashSet<string>();
+            foreach (var student in students)
+            {
+                foreach (var grade in student.Grades)
+                {
+                    courses.Add(grade.Course);
+                }
+            }
+
+            foreach (var course in courses)
+            {
+                Console.WriteLine("--------------------------------");
+                Console.WriteLine("");
+                Console.WriteLine(course);
+                Console.WriteLine("");
+                Console.WriteLine("--------------------------------");
+
+            }
+        }
+
+        static void AddCourse(List<Student> students)
+        {
+            Console.WriteLine("Ajouter un cours");
+            Console.WriteLine("");
+            Console.Write("Entrez le nom du cours : ");
+            string course = Console.ReadLine();
+
+            foreach (var student in students)
+            {
+                Grade newGrade = new Grade(course, 0, "");
+                student.Grades.Add(newGrade);
+            }
+            Console.WriteLine("");
+            Console.WriteLine("Cours ajouté avec succès.");
+        }
+
+        static void DeleteCourse(List<Student> students)
+        {
+            Console.WriteLine("Supprimer le cours");
+            Console.WriteLine("");
+            Console.Write("Entrez le nom du cours : ");
+            string course = Console.ReadLine();
+
+           Console.WriteLine("");
+            Console.WriteLine("Êtes-vous sûr de vouloir supprimer ce cours ? (O/N)");
+            string confirmation = Console.ReadLine();
+
+            if (confirmation.ToUpper() == "O")
+            {
+                foreach (var student in students)
+                {
+                    student.Grades.RemoveAll(g => g.Course == course);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("Cours supprimé avec succès.");
+            }
+        }
+
+        static List<Student> LoadData()
+        {
+            if (File.Exists(DataFilePath))
+            {
+                string jsonData = File.ReadAllText(DataFilePath);
+                return JsonConvert.DeserializeObject<List<Student>>(jsonData);
+            }
+            else
+            {
+                return new List<Student>();
+            }
+        }
+
+        static void SaveData(List<Student> students)
+        {
+            string jsonData = JsonConvert.SerializeObject(students, Formatting.Indented);
+            File.WriteAllText(DataFilePath, jsonData);
         }
     }
 
-// function for listing corses
- public static void ListCourses()
-    {
-        Console.WriteLine("Liste des cours :");
-
-        foreach (var course in courses)
-        {
-            Console.WriteLine($"ID: {course.Id}, Nom: {course.Name}");
-        }
-
-        Console.WriteLine();
-        DisplayCourseMenu();
-    }
-
-
-// function for adding a courses
-public static void AddCourse()
-    {
-        Console.WriteLine("Ajout d'un nouveau cours au programme :");
-
-        Console.WriteLine("Entrez l'identifiant :");
-        int id = Convert.ToInt32(Console.ReadLine());
-
-        Console.WriteLine("Entrez le nom :");
-        string name = Console.ReadLine();
-
-        Course newCourse = new Course(id, name);
-        courses.Add(newCourse);
-
-        Console.WriteLine("Nouveau cours ajouté avec succès !");
-        Console.WriteLine();
-        DisplayCourseMenu();
-    }
-
-
-// function for delete a course
- public static void DeleteCourse()
-    {
-        Console.WriteLine("Suppression d'un cours par son identifiant :");
-        Console.WriteLine("Entrez l'identifiant du cours :");
-        int id = Convert.ToInt32(Console.ReadLine());
-
-        Course courseToDelete = courses.Find(c => c.Id == id);
-
-        if (courseToDelete != null)
-        {
-            courses.Remove(courseToDelete);
-            Console.WriteLine("Cours supprimé avec succès !");
-        }
-        else
-        {
-            Console.WriteLine("Aucun cours avec cet identifiant n'a été trouvé.");
-        }
-
-        Console.WriteLine();
-        DisplayCourseMenu();
-    }
-#endregion
-
-
-
-
-
+    
+    
 }

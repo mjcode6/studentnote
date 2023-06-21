@@ -2,41 +2,38 @@ using System;
 
 namespace studentnote
 {
-    public class Student
+    class Student
     {
         public int Id { get; set; }
-    public string LastName { get; set; }
-    public string FirstName { get; set; }
-    public DateTime DateOfBirth { get; set; }
-    public Dictionary<string, Tuple<double, string>> Grades { get; set; } 
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public List<Grade> Grades { get; set; }
 
-
-public Student(int id, string lastName, string firstName, DateTime dateOfBirth)
-    {
-        Id = id;
-        LastName = lastName;
-        FirstName = firstName;
-        DateOfBirth = dateOfBirth;
-        Grades = new Dictionary<string, Tuple<double, string>>();
-    }
-
-
-public double CalculateAverageGrade()
-    {
-        if (Grades.Count == 0)
-            return 0;
-
-        double total = 0;
-        foreach (var grade in Grades)
+        public Student(int id, string firstName, string lastName, DateTime dateOfBirth)
         {
-            total += grade.Value.Item1;
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            DateOfBirth = dateOfBirth;
+            Grades = new List<Grade>();
         }
 
-        return total / Grades.Count;
+        public double CalculateAverageGrade()
+        {
+            if (Grades.Count == 0)
+            {
+                return 0;
+            }
+
+            double totalGrade = 0;
+            foreach (var grade in Grades)
+            {
+                totalGrade += grade.GetGrade();
+            }
+
+            return totalGrade / Grades.Count;
+        }
     }
 
-
-    }
-
-    
 }

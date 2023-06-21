@@ -1,0 +1,14 @@
+[
+  {
+    "Id": 1,
+    "FirstName": "Manoj",
+    "LastName": "Sivasuthan",
+    "DateOfBirth": "1995-11-11T00:00:00",
+    "Grades": [
+      {
+        "Course": "English",
+        "Comment": "Bien"
+      }
+    ]
+  }
+]
